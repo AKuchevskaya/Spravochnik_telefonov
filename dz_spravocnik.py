@@ -14,7 +14,19 @@ def open_sprav(file_name=FILE_NAME):
 def print_sprav(sprav):
     for item in sprav:
         print(*(f"{k}: {v:<16}" for k, v in item.items()))
-   
+        
+"""Добавляем новый кантакт""" 
+def add_contact(sprav):
+    row = input ('Введите Ф.И.О. и телефон, резделенные пробелами: ').split()
+    line = [len (sprav) + 1] + [item.strip().capitalize() for item in row]
+    sprav.append(dict(zip(HEADERS, line)))
+
+"""Сохраняем контакт перед выходом"""
+def save_contact(directory: list[dict[str, str]], file_name=FILE_NAME):
+    with open(file_name, 'w', encoding='utf-8') as file:
+        for item in directory:
+            file.write(' '.join(f'{value}' for key, value in item.items() if key != 'id') + '\n')
+
 def main (sprav):
     while True:
         print(f"""\nЧто хотите сделать?
@@ -27,7 +39,10 @@ def main (sprav):
         x = input()
         if x == '1':
             print_sprav(sprav)
+        elif x == '2':
+            add_contact(sprav)
         elif x == '0':
+            save_contact(sprav)
             break
         else:
             print('Неверная команда!')
