@@ -27,6 +27,12 @@ def save_contact(directory: list[dict[str, str]], file_name=FILE_NAME):
         for item in directory:
             file.write(' '.join(f'{value}' for key, value in item.items() if key != 'id') + '\n')
 
+"""Поиск контакта по ключу"""
+def find_contact(key: str, value: str, directory: list[dict[str, str]]):
+    for item in directory:
+        if item[key] == value:
+            print(item)
+   
 def main (sprav):
     while True:
         print(f"""\nЧто хотите сделать?
@@ -41,6 +47,9 @@ def main (sprav):
             print_sprav(sprav)
         elif x == '2':
             add_contact(sprav)
+        elif x == '3':
+            last_name = 'фамилия'
+            find_contact(key=last_name, value=input(f'{last_name.title()}: ').strip().capitalize(), directory=sprav)
         elif x == '0':
             save_contact(sprav)
             break
