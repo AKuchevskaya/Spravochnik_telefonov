@@ -10,36 +10,44 @@ def open_sprav(file_name=FILE_NAME):
             sprav.append(dict(zip(HEADERS, row)))
     return sprav
 
-"""Вывод на экран справочника"""
+"""1. Вывод на экран справочника"""
 def print_sprav(sprav):
     for item in sprav:
         print(*(f"{k}: {v:<16}" for k, v in item.items()))
         
-"""Добавляем новый кантакт""" 
+"""2. Добавляем новый кантакт""" 
 def add_contact(sprav):
     row = input ('Введите Ф.И.О. и телефон, резделенные пробелами: ').split()
     line = [len (sprav) + 1] + [item.strip().capitalize() for item in row]
     sprav.append(dict(zip(HEADERS, line)))
 
-"""Сохраняем контакт перед выходом"""
+"""0. Сохраняем контакт перед выходом"""
 def save_contact(directory: list[dict[str, str]], file_name=FILE_NAME):
     with open(file_name, 'w', encoding='utf-8') as file:
         for item in directory:
             file.write(' '.join(f'{value}' for key, value in item.items() if key != 'id') + '\n')
 
-"""Поиск контакта по ключу"""
+"""3. Поиск контакта по ключу"""
 def find_contact(key: str, value: str, directory: list[dict[str, str]]):
     for item in directory:
         if item[key] == value:
             print(item)
-   
+            
+"""4. Копирем данные в файл new_sprav.txt."""
+def copy_contact(number, directory):
+    if number.isdigit() and (id_ := int (number)) <= len (directory):
+        print(*(f" {k}: {v:<16}" for k, v in directory[id_ - 1].items()))
+        save_contact([directory[id_ - 1]], file_name= 'new_sprav.txt')
+    else:
+        print('Нет такого id')
+ 
 def main (sprav):
     while True:
         print(f"""\nЧто хотите сделать?
         1: Вывести данные
         2: Записать новый контакт
         3: Найти контакт по полю 'фамилия'
-        4: Скопировать строку по 'id' в новый файл
+        4: Скопировать данные по 'id' в новый файл
         0: Сохранить и выйти""")
         
         x = input()
@@ -50,6 +58,8 @@ def main (sprav):
         elif x == '3':
             last_name = 'фамилия'
             find_contact(key=last_name, value=input(f'{last_name.title()}: ').strip().capitalize(), directory=sprav)
+        elif x == '4':
+            copy_contact(number=input('Введите id, который хотите скопировать в отедльный файл: '), directory=sprav)
         elif x == '0':
             save_contact(sprav)
             break
